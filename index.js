@@ -135,13 +135,13 @@ app.get("/categories", async (req, res) => {
 //   }
 // });
 
-// Hit | POST /orders
-app.post("/orders", (req, res) => {
-  const { cartId } = req.body;
-  const orders = { cartId };
-  console.log("Orders Hit:", orders);
-  res.json(orders);
-});
+// // Hit | POST /orders
+// app.post("/orders", (req, res) => {
+//   const { cartId } = req.body;
+//   const orders = { cartId };
+//   console.log("Orders Hit:", orders);
+//   res.json(orders);
+// });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
