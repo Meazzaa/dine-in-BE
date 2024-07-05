@@ -16,9 +16,9 @@ model User {
 }
 
 model Food {
-  id         Int     @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
   name       String
-  image      String
+  image      String @map("url")
   price      Int
   categoryId Int
 }
@@ -26,31 +26,31 @@ model Food {
 model Category {
   id    Int    @id @default(autoincrement())
   name  String
-  image String
+  image String @map("url")
 }
 
 model Cart {
-  id     Int      @id @default(autoincrement())
-  userId Int      @unique
+  id     Int    @id @default(autoincrement())
+  userId String
 }
 
 model Cart_Item {
-  id     Int   @id @default(autoincrement())
+  id     Int    @id @default(autoincrement())
   foodId Int
   qty    Int
-  cartId Int
+  cartId String
 }
 
 model Order {
-  id          Int          @id @default(autoincrement())
-  userId      Int
+  id          Int    @id @default(autoincrement())
+  userId      String
   total       Int
   queueNumber Int
   type        String
 }
 
 model Order_item {
-  id     Int   @id @default(autoincrement())
+  id     Int @id @default(autoincrement())
   foodId Int
   qty    Int
   amount Int
