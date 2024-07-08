@@ -11,47 +11,62 @@ datasource db {
 }
 
 model User {
-  id          Int    @id @default(autoincrement())
-  phoneNumber String @unique
+  id          Int     @id @default(autoincrement())
+  phoneNumber String  @unique
+  carts       Cart[]
+  orders      Order[]
 }
 
 model Food {
-  id         Int    @id @default(autoincrement())
+  id         Int          @id @default(autoincrement())
   name       String
-  image      String @map("url")
+  image      String       @map("url")
   price      Int
   categoryId Int
+  category   Category     @relation(fields: [categoryId], references: [id])
+  cartItems  Cart_Item[]
+  orderItems Order_item[]
 }
 
 model Category {
   id    Int    @id @default(autoincrement())
   name  String
   image String @map("url")
+  foods Food[]
 }
 
 model Cart {
-  id     Int    @id @default(autoincrement())
-  userId String
+  id     Int         @id @default(autoincrement())
+  userId Int
+  user   User        @relation(fields: [userId], references: [id])
+  items  Cart_Item[]
 }
 
 model Cart_Item {
-  id     Int    @id @default(autoincrement())
+  id     Int  @id @default(autoincrement())
   foodId Int
   qty    Int
-  cartId String
+  cartId Int
+  cart   Cart @relation(fields: [cartId], references: [id])
+  food   Food @relation(fields: [foodId], references: [id])
 }
 
 model Order {
-  id          Int    @id @default(autoincrement())
-  userId      String
+  id          Int          @id @default(autoincrement())
+  userId      Int
   total       Int
   queueNumber Int
   type        String
+  user        User         @relation(fields: [userId], references: [id])
+  items       Order_item[]
 }
 
 model Order_item {
-  id     Int @id @default(autoincrement())
-  foodId Int
-  qty    Int
-  amount Int
+  id      Int   @id @default(autoincrement())
+  foodId  Int
+  qty     Int
+  amount  Int
+  orderId Int
+  order   Order @relation(fields: [orderId], references: [id])
+  food    Food  @relation(fields: [foodId], references: [id])
 }

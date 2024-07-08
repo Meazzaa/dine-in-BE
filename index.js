@@ -1,148 +1,205 @@
-const express = require("express");
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
-const bodyParser = require("body-parser");
-const { v4: uuidv4 } = require("uuid");
-const app = express();
-const port = 3000;
+// const express = require("express");
+// const { PrismaClient } = require("@prisma/client");
+// const prisma = new PrismaClient();
+// const bodyParser = require("body-parser");
+// const app = express();
+// const port = 3000;
 
-app.use(bodyParser.json());
-app.use(express.json());
+// app.use(bodyParser.json());
+// app.use(express.json());
 
-// getUser
-app.get("/user", async (req, res) => {
-  try {
-    const user = await prisma.user.findMany();
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
-  }
-});
+// // Create User
+// app.post("/login", async (req, res) => {
+//   const { phoneNumber } = req.body;
+//   try {
+//     const user = await prisma.user.create({
+//       data: {
+//         phoneNumber: phoneNumber,
+//       },
+//     });
+//     res.status(201).json(user);
+//   } catch (error) {
+//     res.status(400).json({ msg: error.message });
+//   }
+// });
 
-// getUserById
-app.get("/user/:id", async (req, res) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: Number(req.params.id),
-      },
-    });
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(404).json({ msg: error.message });
-  }
-});
+// // Get All User
+// app.get("/user", async (req, res) => {
+//   try {
+//     const user = await prisma.user.findMany();
+//     res.status(200).json(user);
+//   } catch (error) {
+//     res.status(500).json({ msg: error.message });
+//   }
+// });
 
-// createUser
-app.post("/login", async (req, res) => {
-  const { phoneNumber } = req.body;
-  try {
-    const user = await prisma.user.create({
-      data: {
-        phoneNumber: phoneNumber,
-      },
-    });
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(400).json({ msg: error.message });
-  }
-});
+// // Get User by Id
+// app.get("/user/:id", async (req, res) => {
+//   try {
+//     const user = await prisma.user.findUnique({
+//       where: {
+//         id: Number(req.params.id),
+//       },
+//     });
+//     res.status(200).json(user);
+//   } catch (error) {
+//     res.status(404).json({ msg: error.message });
+//   }
+// });
 
-// updateUser
-app.patch("/user/:id", async (req, res) => {
-  try {
-    const { phoneNumber } = req.body;
-    const user = await prisma.user.update({
-      where: {
-        id: Number(req.params.id),
-      },
-      data: {
-        phoneNumber: phoneNumber,
-      },
-    });
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(400).json({ msg: error.message });
-  }
-});
+// // Update User by Id
+// app.patch("/user/:id", async (req, res) => {
+//   try {
+//     const { phoneNumber } = req.body;
+//     const user = await prisma.user.update({
+//       where: {
+//         id: Number(req.params.id),
+//       },
+//       data: {
+//         phoneNumber: phoneNumber,
+//       },
+//     });
+//     res.status(200).json(user);
+//   } catch (error) {
+//     res.status(400).json({ msg: error.message });
+//   }
+// });
 
-// getCategories
-app.get("/categories", async (req, res) => {
-  const categories = await prisma.category.findMany();
-  res.send(categories);
-});
+// // Get All Category
+// app.get("/categories", async (req, res) => {
+//   const categories = await prisma.category.findMany();
+//   res.send(categories);
+// });
 
-// // Gagal | GET /foods?category=(for you = all, categoryId)
-// app.get("/foods", (req, res) => {
+// //Get Foods by Category
+// app.get("/foods", async (req, res) => {
 //   const { category } = req.query;
-//   const foods = [
-//     { id: 1, name: "Apple", categoryId: "fruit" },
-//     { id: 2, name: "Broccoli", categoryId: "vegetable" },
-//     { id: 3, name: "Chicken", categoryId: "meat" },
-//     { id: 4, name: "Banana", categoryId: "fruit" },
-//     { id: 5, name: "Carrot", categoryId: "vegetable" },
-//   ];
-//   if (category === "all" || !category) {
+
+//   try {
+//     let foods;
+//     if (category && category !== 'all') {
+//       foods = await prisma.food.findMany({
+//         where: { categoryId: Number(category) }
+//       });
+//     } else {
+//       foods = await prisma.food.findMany();
+//     }
 //     res.json(foods);
-//   } else {
-//     res.json(foods.filter((food) => food.categoryId === category));
+//   } catch (error) {
+//     res.status(500).json({ error: 'Something went wrong' });
 //   }
-//   console.log("Foods Hit:", foods);
 // });
 
-// app.use((req, res, next) => {
-//   req.user = { id: 1 }; // Simulasi user dengan id 1
-//   next();
-// });
+// //Get Carts by userId
+// app.get("/carts", async (req, res) => {
+//   const { userId } = req.query;
 
-// // Gagal | GET /carts (get current cart if exist by user)
-// app.get("/carts", (req, res) => {
-//   const carts = [
-//     { userId: 1, items: [{ id: 1, name: "Apple", quantity: 3 }] },
-//     { userId: 2, items: [{ id: 2, name: "Broccoli", quantity: 2 }] },
-//   ];
-//   const userCart = carts.find((c) => c.userId === req.user.id);
-//   if (userCart) {
-//     res.json(userCart);
-//   } else {
-//     res.status(404).json({ error: "Cart not found" });
+//   try {
+//     const cart = await prisma.cart.findFirst({
+//       where: { userId: Number(userId) },
+//       include: { items: { include: { food: true } } }
+//     });
+
+//     if (cart) {
+//       res.json(cart);
+//     } else {
+//       res.status(404).json({ error: 'Cart not found' });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ error: 'Something went wrong' });
 //   }
-//   console.log("Cart Hit:", userCart);
 // });
 
-// app.use((req, res, next) => {
-//   req.user = { id: 1 }; // Simulasi user dengan id 1
-//   next();
-// });
+// //Create Carts for User by userId if not exist create newcart 
+// app.post("/carts", async (req, res) => {
+//   const { userId, items } = req.body;
 
-// // Gagal | POST /carts (create if not exist)
-// app.post("/carts", (req, res) => {
-//   const carts = [
-//     { userId: 2, items: [{ id: 2, name: "Broccoli", quantity: 2 }] },
-//   ];
-//   const cart = carts.find((c) => c.userId === req.user.id);
-//   if (cart) {
+//   try {
+//     let cart = await prisma.cart.findFirst({
+//       where: { userId: Number(userId) },
+//       include: { items: true }
+//     });
+
+//     if (!cart) {
+//       cart = await prisma.cart.create({
+//         data: {
+//           userId: Number(userId),
+//           items: {
+//             create: items.map(item => ({
+//               foodId: item.foodId,
+//               qty: item.quantity
+//             }))
+//           }
+//         },
+//         include: { items: true }
+//       });
+//     } else {
+//       cart = await prisma.cart.update({
+//         where: { id: cart.id },
+//         data: {
+//           items: {
+//             create: items.map(item => ({
+//               foodId: item.foodId,
+//               qty: item.quantity
+//             }))
+//           }
+//         },
+//         include: { items: true }
+//       });
+//     }
+
 //     res.json(cart);
-//   } else {
-//     const newCart = {
-//       id: uuidv4(),
-//       userId: req.user.id,
-//       items: req.body.items || [],
-//     };
-//     carts.push(newCart);
-//     console.log("New Cart created:", newCart);
-//     res.status(201).json(newCart);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Something went wrong' });
 //   }
 // });
 
-// // Hit | POST /orders
-// app.post("/orders", (req, res) => {
+// // Create Orders by cardId if not exist Cart not found
+// app.post("/orders", async (req, res) => {
 //   const { cartId } = req.body;
-//   const orders = { cartId };
-//   console.log("Orders Hit:", orders);
-//   res.json(orders);
+
+//   try {
+//     const cart = await prisma.cart.findUnique({
+//       where: { id: Number(cartId) },
+//       include: { items: { include: { food: true } } }
+//     });
+
+//     if (!cart) {
+//       return res.status(404).json({ error: 'Cart not found' });
+//     }
+
+//     const total = cart.items.reduce((sum, item) => sum + (item.qty * item.food.price), 0);
+
+//     const order = await prisma.order.create({
+//       data: {
+//         userId: cart.userId,
+//         total,
+//         queueNumber: await prisma.order.count() + 1,
+//         type: 'Dine-in',
+//         items: {
+//           create: cart.items.map(item => ({
+//             foodId: item.foodId,
+//             qty: item.qty,
+//             amount: item.qty * item.food.price
+//           }))
+//         }
+//       },
+//       include: { items: true }
+//     });
+
+//     // Clear the cart after creating the order
+//     await prisma.cart.update({
+//       where: { id: Number(cartId) },
+//       data: { items: { deleteMany: {} } }
+//     });
+
+//     res.json(order);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Something went wrong' });
+//   }
 // });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+
+// app.listen(port, () => {
+//   console.log(`Server is running on port ${port}`);
+// });
