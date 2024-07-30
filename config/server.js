@@ -5,9 +5,11 @@ const cartRoutes = require("../routes/cartRoutes");
 const categoryRoutes = require("../routes/categoryRoutes");
 const foodRoutes = require("../routes/foodRoutes");
 const orderRoutes = require("../routes/orderRoutes");
+const cors = require("cors")
 
 const app = express();
 const port = 3000;
+app.use(cors({origin:"*"}))
 
 app.use(bodyParser.json());
 app.use(express.json());
